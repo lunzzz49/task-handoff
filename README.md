@@ -58,19 +58,22 @@ python ~/.workbuddy/skills/task-handoff/tests/test_handoff.py
 ### 写一份交接
 
 ```bash
-# 1. 建骨架（在项目根执行）
-python scripts/handoff.py new --slug phase-2
+# 先把 skill 里的脚本路径记下来（按你的实际安装位置改）
+export HANDOFF=~/.workbuddy/skills/task-handoff/scripts/handoff.py
 
-# 2. 填十节（AI 按 SKILL.md 的流程填，不是人手工写）
+# 1. 在项目根建骨架
+python "$HANDOFF" new --slug phase-2
+
+# 2. 填十节 —— 由 AI 按 SKILL.md 的流程填，不是人手工写
 
 # 3. 机械校验 + 事实核对
-python scripts/handoff.py check --stale
+python "$HANDOFF" check --stale
 ```
 
 ### 读一份交接
 
 ```bash
-python scripts/handoff.py latest   # 拿最新一份的绝对路径
+python "$HANDOFF" latest   # 拿最新一份的绝对路径
 ```
 
 如果最新一份是刚建还没填的空骨架，`latest` 会警告并给出上一份——避免新会话把空文档当真。
