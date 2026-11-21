@@ -39,7 +39,7 @@ A skill for AI coding agents: compress a work phase into one self-contained hand
 **作为 skill**：把本目录放到 skill 目录下即可。
 
 ```bash
-git clone https://github.com/Lunq/task-handoff.git ~/.workbuddy/skills/task-handoff
+git clone https://github.com/lunzzz49/task-handoff.git ~/.workbuddy/skills/task-handoff
 ```
 
 WorkBuddy / CodeBuddy 会自动读取 `SKILL.md`。其它支持 `SKILL.md` 规范的 agent 客户端同理。
