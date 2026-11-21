@@ -44,16 +44,18 @@ A skill for AI coding agents: compress a work phase into one self-contained hand
 git clone https://github.com/lunzzz49/task-handoff.git ~/.workbuddy/skills/task-handoff
 ```
 
-WorkBuddy / CodeBuddy 会自动读取 `SKILL.md`。其它支持 `SKILL.md` 规范的 agent 客户端同理。
+WorkBuddy / CodeBuddy 会自动读取 `SKILL.md`。其它支持 `SKILL.md` 规范的客户端同理（Claude Code 用 `~/.claude/skills/task-handoff`）。若目标目录已存在，先删掉或改用 `git pull`。
 
-**依赖**：Python 3.9+，**零第三方库**（只用标准库）。
+**依赖**：Python 3.9+，**零第三方库**——skill 本身只用标准库。仓库里的 `.github/scripts/build_pages.py` 需要 `markdown`，但那只在 CI 里跑，本地用不到。
 
 **验证安装**：
 
 ```bash
 python ~/.workbuddy/skills/task-handoff/tests/test_handoff.py
-# Ran 61 tests ... OK
+# Ran 64 tests ... OK
 ```
+
+Windows 上若 `python` 不可用，试 `py`。
 
 ## 用法
 

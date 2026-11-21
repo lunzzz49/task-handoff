@@ -547,5 +547,45 @@ class TestRootDetection(unittest.TestCase):
             shutil.rmtree(root, ignore_errors=True)
 
 
+class TestLatestBranch(unittest.TestCase):
+    """缺陷⑱：latest 不区分分支，切分支后会读到另一条线的状态。"""
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp())
+        (self.root / "requirements.txt").write_text("x", encoding="utf-8")
+        self._git("init", "-q", "-b", "main")
+        self._git("-c", "user.email=t@t", "-c", "user.name=t",
+                  "commit", "-qm", "init", "--allow-empty")
+
+    def tearDown(self):
+        shutil.rmtree(self.root, ignore_errors=True)
+
+    def _git(self, *args):
+        return subprocess.run(["git", *args], cwd=str(self.root), capture_output=True, text=True)
+
+    def _new(self, slug):
+        rc, _ = quiet(mod.cmd_new, Namespace(slug=slug, root=str(self.root), inherit=False))
+        self.assertEqual(rc, 0)
+
+    def test_warns_when_doc_belongs_to_other_branch(self):
+        self._new("on-main")
+        self._git("checkout", "-q", "-b", "dev")
+        _, out = quiet(mod.cmd_latest, Namespace(root=str(self.root)))
+        self.assertIn("当前在 dev 分支", out)
+
+    def test_prefers_current_branch_document(self):
+        self._new("on-main")
+        self._git("checkout", "-q", "-b", "dev")
+        self._new("on-dev")
+        _, out = quiet(mod.cmd_latest, Namespace(root=str(self.root)))
+        self.assertNotIn("当前在 dev 分支", out)
+        self.assertIn("on-dev", out)
+
+    def test_no_warning_when_single_branch(self):
+        self._new("only-main")
+        _, out = quiet(mod.cmd_latest, Namespace(root=str(self.root)))
+        self.assertNotIn("当前在", out)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

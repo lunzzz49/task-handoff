@@ -548,7 +548,16 @@ def cmd_latest(args) -> int:
     if not files:
         print(f"{root / HANDOFF_DIR} 下没有交接文档", file=sys.stderr)
         return 1
-    latest = files[-1]
+    # 优先返回当前分支的文档：切到别的分支后直接把「最新的一份」给出去，
+    # 接手的人会读到另一条线的状态，比读到空文档更容易误判。
+    branch = git_branch(root)
+    same_branch = []
+    if branch:
+        for f in files:
+            if header_branch(f.read_text(encoding="utf-8")) == branch:
+                same_branch.append(f)
+    latest = same_branch[-1] if same_branch else files[-1]
+
     text = latest.read_text(encoding="utf-8")
     status = re.search(r"^-\s*状态[：:]\s*(.+)$", text, re.M)
     print(str(latest))
@@ -558,6 +567,14 @@ def cmd_latest(args) -> int:
         print(f"进展条目：{len(entries)} 条")
     if len(files) > 1:
         print(f"同目录共 {len(files)} 份，这是最新的一份")
+
+    # 本分支没有文档时退回到最新那份，必须说清它是哪条线的
+    doc_branch = header_branch(text)
+    if branch and doc_branch and doc_branch not in ("无", "无（非 git 仓库）") and doc_branch != branch:
+        print(
+            f"[!] 这份记录的是 {doc_branch} 分支，当前在 {branch} 分支"
+            f"——本分支还没有交接文档，读之前先核对状态是否已过期"
+        )
 
     # 刚 new 完就中断的情况：骨架没填，连头部的「状态」都是占位符。
     # 不提示的话，接手的人可能把空骨架当成真实交接读，把「进行中」当真。

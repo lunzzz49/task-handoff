@@ -39,7 +39,7 @@
 
 ```bash
 cd <目标项目根>
-python <skill路径>/scripts/handoff.py new --slug <主题>
+python <skill目录>/scripts/handoff.py new --slug <主题>
 # 按 SKILL.md 的流程读代码、填十节
-python <skill路径>/scripts/handoff.py check --stale
+python <skill目录>/scripts/handoff.py check --stale
 ```

@@ -103,7 +103,7 @@ python <skill目录>/scripts/handoff.py new --slug <英文短主题> --inherit
 
 1. 项目虚拟环境：`.venv\Scripts\python.exe`（Windows）/ `.venv/bin/python`（macOS、Linux）
 2. `python` / `python3` / `py`（任一能跑出 `-V` 即可用）
-3. 装了 Anaconda 但不在 PATH 时用其绝对路径（如 `D:\Tools\Anaconda3\python.exe`，按机器实际填）
+3. 装了 Anaconda 但不在 PATH 时用其绝对路径（如 `%USERPROFILE%\anaconda3\python.exe`，按机器实际填）
 
 都找不到就直接复制 `references/handoff-template.md` 里的骨架手写，不要卡在这。
 
@@ -185,7 +185,7 @@ python <skill目录>/scripts/handoff.py log --event "一句话说清做成了什
 - 写入前**自动快照**到 `.handoff/.snapshots/`
 - 每条自动带 6 位短 ID
 - 多个文件用逗号分隔（`--files "a.py, b.py"`），脚本会拆成各自的反引号；整串包一个反引号会被 `--stale` 判成非路径而跳过核对
-- **按分支隔离**：文档头部记录 git 分支。若当前分支与文档记录的不一致（你切了分支），脚本会另建一份带分支后缀的文档，原文档原封不动，并明确告知你切换了哪两个分支
+- **按分支隔离**：文档头部记录 git 分支。切了分支后，`new` 会另建一份带分支后缀的文档，原文档原封不动，并告知你切换了哪两个分支；`latest` 优先返回本分支的那份，本分支还没有时退回最新一份，并明确提示它记录的是哪条分支
 
 条目怎么写、写多细，见 `references/standards.md` 的「进展条目写法」。
 
@@ -278,6 +278,6 @@ python <skill目录>/scripts/handoff.py summarize --apply   # 归档：条目移
 python <skill目录>/tests/test_handoff.py -v
 ```
 
-61 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定。
+64 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、latest 分支隔离、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定。
 
 改 `scripts/handoff.py` 不跑测试等于裸奔——`undo` 的行尾处理、`--stale` 的时间容差这类边界，只在你真的急着撤回时才会暴露。
