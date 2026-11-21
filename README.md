@@ -97,7 +97,7 @@ python "$HANDOFF" latest   # 拿最新一份的绝对路径
 
 ### 可选：自动提醒
 
-第四节「收尾兜底」原本靠 AI 记得自查。挂上事件入口后，说「收工 / 换个窗口 / 交接」会注入一句提醒，测试跑通会自动记一条进展。
+第四节「收尾自查」原本靠 AI 记得动手。挂上事件入口后，说「收工 / 换个窗口 / 交接」会注入一句提醒，测试跑通会自动记一条进展。
 
 ```bash
 python scripts/install_hooks.py    # Claude Code；其它客户端见 references/integration.md
