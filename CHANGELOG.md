@@ -24,7 +24,8 @@
 
 ### 实测
 
-在 12 个真实项目上生成并校验，覆盖 9 门语言（Python / TypeScript / JavaScript / Go / Rust / Java / C++ / C# / Kotlin）、三种 git 状态（空仓库 / 有历史 / 无 git）、三种文档完备度、8 到 3353 文件的规模。全部通过 `check --stale`。
+在 8 个开源项目上生成并校验，覆盖 7 门语言（Python / Go / Rust / Java / C++ / C# / Kotlin）、
+从「只有 README」到「578 行规范文档」的文档完备度差异、8 到 3353 文件的规模。全部通过 `check --stale`。
 
 ### 实测中修掉的问题
 

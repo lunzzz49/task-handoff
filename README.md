@@ -24,6 +24,8 @@ A skill for AI coding agents: compress a work phase into one self-contained hand
 
 ## 看效果
 
+![check --stale 的真实输出](docs/preview.svg)
+
 在 [`microsoft/markitdown`](https://github.com/microsoft/markitdown)（197k star）上生成的第 6 节节选：
 
 > - **priority 有两条并存规则，极易搞反**：注释写明「数字越小越先试」，同时另一处写明「后注册的优先于先注册的」。加转换器时既要挑对 priority 常量，也要注意注册顺序的影响，不能只改一个
@@ -141,7 +143,7 @@ python "$HANDOFF" latest   # 拿最新一份的绝对路径
 
 ## 实测覆盖
 
-在 12 个真实项目上生成并校验，全部通过：
+在 8 个开源项目上生成并校验，全部通过：
 
 | 项目 | 语言 | 类型 |
 |---|---|---|
@@ -153,9 +155,8 @@ python "$HANDOFF" latest   # 拿最新一份的绝对路径
 | charmbracelet/bubbletea (46k★) | Go | 单包扁平 |
 | modelcontextprotocol/python-sdk (25k★) | Python | 官方 SDK，根级 AGENTS.md |
 | App-vNext/Polly (14k★) | C# | .NET，v8 重写 |
-| 三个自研项目 | TS / JS / Python | 含空 git 仓库、无 git、非标准文档 |
 
-覆盖了三种 git 状态（空仓库 / 有历史 / 无 git）、三种文档完备度、8 到 3353 文件的项目规模。
+覆盖 7 门语言、8 到 3353 文件的项目规模，以及从「只有 README」到「578 行规范文档」的文档完备度差异。
 
 ## 已知边界
 

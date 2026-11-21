@@ -16,3 +16,6 @@ Thumbs.db
 
 # 本地生成的交接产物（不属于 skill 本体）
 .handoff/
+
+# Pages 构建产物
+_site/

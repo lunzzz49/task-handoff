@@ -4,14 +4,14 @@
 
 | 文件 | 项目 | star | 语言 | 一份文档主要抓到了什么 |
 |---|---|---|---|---|
-| `markitdown.md` | [microsoft/markitdown](https://github.com/microsoft/markitdown) | 197k | Python | `priority` 双规则并存、`accepts()` 的 stream 契约、monorepo 根无 pyproject |
-| `python-sdk.md` | [modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk) | 25k | Python | `docs_src` 与测试的联动（文档示例即 CI 跑的代码） |
-| `bubbletea.md` | [charmbracelet/bubbletea](https://github.com/charmbracelet/bubbletea) | 46k | Go | module path 不是 GitHub 地址、build tags 双写、`-race -count 4` |
-| `bat.md` | [sharkdp/bat](https://github.com/sharkdp/bat) | 61k | Rust | build script 不在根目录、`application` feature 当库用要关 |
-| `guava.md` | [google/guava](https://github.com/google/guava) | 52k | Java | 非标准 Maven 布局（无 `main/java`）、API 变更需先评审、CLA |
-| `json.md` | [nlohmann/json](https://github.com/nlohmann/json) | 51k | C++ | 两套源码形态、五套构建系统、C++11~26 六标准验证 |
-| `polly.md` | [App-vNext/Polly](https://github.com/App-vNext/Polly) | 14k | C# | v8 重写与 legacy 包的边界、集中式包版本管理 |
-| `okhttp.md` | [square/okhttp](https://github.com/square/okhttp) | 47k | Kotlin | `build-logic` 是复合构建、mockwebserver 四模块 |
+| [`markitdown.md`](markitdown.md) | [microsoft/markitdown](https://github.com/microsoft/markitdown) | 197k | Python | `priority` 双规则并存、`accepts()` 的 stream 契约、monorepo 根无 pyproject |
+| [`python-sdk.md`](python-sdk.md) | [modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk) | 25k | Python | `docs_src` 与测试的联动（文档示例即 CI 跑的代码） |
+| [`bubbletea.md`](bubbletea.md) | [charmbracelet/bubbletea](https://github.com/charmbracelet/bubbletea) | 46k | Go | module path 不是 GitHub 地址、build tags 双写、`-race -count 4` |
+| [`bat.md`](bat.md) | [sharkdp/bat](https://github.com/sharkdp/bat) | 61k | Rust | build script 不在根目录、`application` feature 当库用要关 |
+| [`guava.md`](guava.md) | [google/guava](https://github.com/google/guava) | 52k | Java | 非标准 Maven 布局（无 `main/java`）、API 变更需先评审、CLA |
+| [`json.md`](json.md) | [nlohmann/json](https://github.com/nlohmann/json) | 51k | C++ | 两套源码形态、五套构建系统、C++11~26 六标准验证 |
+| [`polly.md`](polly.md) | [App-vNext/Polly](https://github.com/App-vNext/Polly) | 14k | C# | v8 重写与 legacy 包的边界、集中式包版本管理 |
+| [`okhttp.md`](okhttp.md) | [square/okhttp](https://github.com/square/okhttp) | 47k | Kotlin | `build-logic` 是复合构建、mockwebserver 四模块 |
 
 ## 怎么读
 
@@ -24,6 +24,16 @@
 ## 关于文件名里的路径
 
 文档头部记录的项目路径（如 `<项目根>`）是当时生成用的临时副本位置，不是项目真实位置。原项目分别在上表链接的仓库里。
+
+## 关于这些文档的性质
+
+这些文档是对上述开源项目的**第三方分析**，目的仅是展示本工具的产出形态。
+
+- 与各项目维护者**无任何关联**，也未获得其背书或审核
+- 文中提到的项目名、模块名、配置项标识符仅用于**指明对象**（nominative use），相关名称与商标归各自所有者
+- 内容基于各项目的**公开源码与公开文档**整理，**不包含**被分析项目的源代码；引用的配置值（如 `cxx_std_11`、`<source>1.8</source>`）属事实性信息
+- 各项目适用其自身许可证（MIT / Apache-2.0 / BSD-3-Clause 等），本仓库**不重新分发**它们的代码
+- 若某项目维护者认为某份文档的表述不当或涉及不当引用，欢迎开 issue，会及时修正或删除
 
 ## 复现
 
