@@ -18,6 +18,25 @@ description: 会话交接与阶段总结技能。当用户要把一个阶段的�
 
 原则：流程决定了「做什么」，标准决定了「做到什么程度」，脚本决定了「不靠人肉记的那些确定性动作」。
 
+## 路径约定
+
+下文所有命令里的 `<skill目录>` 指**本 skill 的安装目录**，是占位符，照抄前替换成实际路径：
+
+| 客户端 | 默认位置 |
+|---|---|
+| WorkBuddy | `~/.workbuddy/skills/task-handoff` |
+| Claude Code | `~/.claude/skills/task-handoff` |
+| 其它 | 你把该目录放在哪，就是哪 |
+
+嫌每次替换麻烦，就把脚本路径存进变量，后面命令统一用它：
+
+```bash
+export HANDOFF=~/.workbuddy/skills/task-handoff/scripts/handoff.py
+python "$HANDOFF" new --slug phase-2
+```
+
+命令里其它尖括号（`<英文短主题>`、`<项目根>`）同样是占位符，按实际情况填，不要原样执行。
+
 ---
 
 ## 一、什么时候写
@@ -176,8 +195,8 @@ python <skill目录>/scripts/handoff.py log --event "一句话说清做成了什
 
 ```
 已记录 a2b276：完成 CSV 导出并通过验证
-撤销这一条：python handoff.py undo --id a2b276
-全部条目：python handoff.py journal
+撤销这一条：python <skill目录>/scripts/handoff.py undo --id a2b276
+全部条目：python <skill目录>/scripts/handoff.py journal
 ```
 
 用户不知道 ID 就撤不回来，所以这步不能省。
