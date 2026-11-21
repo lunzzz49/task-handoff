@@ -234,6 +234,9 @@ def looks_like_path(s: str) -> bool:
     # github.com/org/repo）。它们不是文件系统里的相对路径，核对毫无意义。
     if re.match(r"^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+/", s):
         return False
+    # git 引用名（refs/heads/main、refs/remotes/origin/main）不是工作区文件
+    if s.startswith("refs/"):
+        return False
     if " " in s or "*" in s or "?" in s or "=" in s:
         return False
     if re.search(r"[/\\]", s):

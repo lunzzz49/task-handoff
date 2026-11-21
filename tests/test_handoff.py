@@ -135,6 +135,11 @@ class TestPaths(unittest.TestCase):
         text = "打开 `chrome://extensions` 或 `vscode://settings`，本地看 `file:///tmp/a`"
         self.assertEqual(mod.extract_paths(text), [])
 
+    def test_rejects_git_refs(self):
+        """坑⑲：refs/heads/main 是 git 引用名，不是工作区文件。"""
+        text = "被重写的是 `refs/heads/main` 和 `refs/remotes/origin/main`"
+        self.assertEqual(mod.extract_paths(text), [])
+
     def test_skips_paths_in_negated_sentences(self):
         """坑⑥：文档说「没有 / 是蓝图 / 已排除」的路径，不能被 --stale 报成缺失。"""
         text = (

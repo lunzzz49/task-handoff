@@ -52,7 +52,7 @@ WorkBuddy / CodeBuddy 会自动读取 `SKILL.md`。其它支持 `SKILL.md` 规�
 
 ```bash
 python ~/.workbuddy/skills/task-handoff/tests/test_handoff.py
-# Ran 64 tests ... OK
+# Ran 65 tests ... OK
 ```
 
 Windows 上若 `python` 不可用，试 `py`。

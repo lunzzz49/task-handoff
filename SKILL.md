@@ -278,6 +278,6 @@ python <skill目录>/scripts/handoff.py summarize --apply   # 归档：条目移
 python <skill目录>/tests/test_handoff.py -v
 ```
 
-64 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、latest 分支隔离、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定。
+65 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、latest 分支隔离、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定。
 
 改 `scripts/handoff.py` 不跑测试等于裸奔——`undo` 的行尾处理、`--stale` 的时间容差这类边界，只在你真的急着撤回时才会暴露。
