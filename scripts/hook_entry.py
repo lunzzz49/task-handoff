@@ -97,6 +97,21 @@ CWD_PATHS = (("cwd",), ("working_dir",), ("workdir",), ("project_root",), ("root
 TOOL_PATHS = (("tool_name",), ("tool",))
 
 
+def setup_io():
+    """三个流都钉成 UTF-8。
+
+    Windows CI 的管道默认走 cp1252，中文从 stdin 读进来就成乱码，关键词匹配不上，
+    而且异常会被 main 的兜底吞掉，表现成「静默不响应」。本地控制台多是 UTF-8，
+    这个问题只在 CI 上出现，不能靠环境碰运气。
+    """
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
 def get_path(payload, path):
     cur = payload
     for part in path:
@@ -345,6 +360,7 @@ def parse_format(argv):
 
 
 def main(argv=None) -> int:
+    setup_io()
     handoff.setup_stdout()
     argv = sys.argv[1:] if argv is None else argv
     try:

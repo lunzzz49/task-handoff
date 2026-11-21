@@ -3,6 +3,7 @@
 import importlib.util
 import io
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -729,6 +730,18 @@ class TestHooks(Base):
         p = self.run_raw("self-test", "")
         self.assertEqual(p.returncode, 0)
         self.assertIn("全部通过", p.stdout)
+
+    def test_non_utf8_environment_still_works(self):
+        """Windows CI 的管道默认 cp1252。中文不能在入口处变成静默空输出。"""
+        env = dict(os.environ, PYTHONIOENCODING="cp1252")
+        p = subprocess.run(
+            [sys.executable, str(SKILL / "scripts" / "hook_entry.py"),
+             "prompt-submit", "--format", "plain"],
+            input="今天就到这吧",
+            capture_output=True, text=True, encoding="utf-8",
+            cwd=str(self.root), timeout=60, env=env,
+        )
+        self.assertIn("4.6", p.stdout)
 
 
 class TestInstallHooks(unittest.TestCase):

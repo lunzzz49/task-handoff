@@ -310,6 +310,6 @@ python <skill目录>/scripts/hook_entry.py self-test
 python <skill目录>/tests/test_handoff.py -v
 ```
 
-89 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、latest 分支隔离、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定、hook 的关键词命中与静默、测试通过/失败/监听模式/退出码判定、判重、无文档不建骨架、裸文本与字段别名输入、三种输出格式、自检、安装器幂等与卸载保留他人配置。
+90 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、latest 分支隔离、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定、hook 的关键词命中与静默、测试通过/失败/监听模式/退出码判定、判重、无文档不建骨架、裸文本与字段别名输入、三种输出格式、自检、安装器幂等与卸载保留他人配置。
 
 改 `scripts/` 下任何脚本不跑测试等于裸奔——`undo` 的行尾处理、`--stale` 的时间容差、hook 的判重窗口，这类边界只在你真的急着撤回或根本记不起来时才会暴露。
