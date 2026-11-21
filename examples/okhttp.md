@@ -1,7 +1,7 @@
 # 交接：模块结构与构建逻辑调研
 
 - 生成时间：2026-11-21 10:40
-- 项目：okhttp（D:/Temp/skill-eval/okhttp）
+- 项目：okhttp（<项目根>）
 - 分支：main
 - 覆盖范围：从读 settings.gradle.kts 与目录结构 → 到搞清多模块划分、build-logic 的作用
 - 上一份交接：无
@@ -116,7 +116,7 @@ JVM 上的 HTTP 客户端：连接池、HTTP/2、拦截器链、WebSocket。既�
 3. 若涉及公共 API，同步检查 `okhttp-bom` 与 `docs/`
 
 **第一步动作**
-> 在 `D:/Temp/skill-eval/okhttp` 下执行 `./gradlew :okhttp:build -x test` 先确认能编译（首次下载依赖较慢），然后打开 `okhttp/src/main/java/okhttp3/` 找到要改的类，并检查 `mockwebserver/` 里是否有依赖它行为的测试。
+> 在 `<项目根>` 下执行 `./gradlew :okhttp:build -x test` 先确认能编译（首次下载依赖较慢），然后打开 `okhttp/src/main/java/okhttp3/` 找到要改的类，并检查 `mockwebserver/` 里是否有依赖它行为的测试。
 
 **待确认**
 - 改动是否影响 mockwebserver 的 deprecated 版？影响就要四个模块一起看
@@ -127,7 +127,7 @@ JVM 上的 HTTP 客户端：连接池、HTTP/2、拦截器链、WebSocket。既�
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/okhttp/.handoff/handoff-2026-11-21-104025-gradle-modules.md，按第 9 节「第一步动作」继续。
+读 .handoff/handoff-2026-11-21-104025-gradle-modules.md，按第 9 节「第一步动作」继续。
 先跑文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 模块结构看 settings.gradle.kts；构建约定在 build-logic（复合构建），不在各模块 build.gradle.kts 里。
 沿用项目现有技术栈，不要新增依赖。

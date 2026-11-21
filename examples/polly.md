@@ -1,7 +1,7 @@
 # 交接：v8 架构调研，理解 Core 与 Legacy 的边界
 
 - 生成时间：2026-11-21 10:39
-- 项目：polly（D:/Temp/skill-eval/polly）
+- 项目：polly（<项目根>）
 - 分支：main
 - 覆盖范围：从读 AGENTS.md 与解决方案结构 → 到分清 v8 重写与 legacy 包的关系
 - 上一份交接：无
@@ -118,7 +118,7 @@
 3. 改完跑 `./build.ps1` 走完整流程，别只跑单测
 
 **第一步动作**
-> 在 `D:/Temp/skill-eval/polly` 下先确认 `dotnet --version` 可用并满足 `Directory.Build.props` 里的目标框架，然后 `dotnet build` 全量编译一次；若目标是加策略，先读 `src/Polly.Core/` 里现有策略的实现与注册方式。
+> 在 `<项目根>` 下先确认 `dotnet --version` 可用并满足 `Directory.Build.props` 里的目标框架，然后 `dotnet build` 全量编译一次；若目标是加策略，先读 `src/Polly.Core/` 里现有策略的实现与注册方式。
 
 **待确认**
 - 这次改动是给 v8（`Polly.Core`）还是维护 legacy？两者不能混
@@ -129,8 +129,8 @@
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/polly/.handoff/handoff-2026-11-21-103932-resilience-v8.md，按第 9 节「第一步动作」继续。
-先读 D:/Temp/skill-eval/polly/AGENTS.md（根级，含构建命令与架构说明）。
+读 .handoff/handoff-2026-11-21-103932-resilience-v8.md，按第 9 节「第一步动作」继续。
+先读 AGENTS.md（根级，含构建命令与架构说明）。
 先跑文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 新功能只进 Polly.Core 体系，不要动 legacy 包 Polly；依赖版本只改 Directory.Packages.props。
 沿用项目现有技术栈，不要新增依赖。

@@ -1,7 +1,7 @@
 # 交接：构建与分发形态调研
 
 - 生成时间：2026-11-21 10:38
-- 项目：json（D:/Temp/skill-eval/json）
+- 项目：json（<项目根>）
 - 分支：develop
 - 覆盖范围：从读 CMakeLists 与 FILES.md → 到搞清两套源码形态、五套构建系统、C++ 标准覆盖
 - 上一份交接：无
@@ -111,7 +111,7 @@
 3. 若涉及构建配置，逐套检查 CMake / Bazel / Meson / Makefile / SwiftPM
 
 **第一步动作**
-> 在 `D:/Temp/skill-eval/json` 下执行 `cmake -S . -B build -DJSON_BuildTests=ON && cmake --build build -j`，再 `ctest --test-dir build`；同时打开 `include/nlohmann/json.hpp` 与 `single_include/nlohmann/json.hpp` 对比，确认两者是同一份内容的不同组织方式，还是需要额外生成步骤。
+> 在 `<项目根>` 下执行 `cmake -S . -B build -DJSON_BuildTests=ON && cmake --build build -j`，再 `ctest --test-dir build`；同时打开 `include/nlohmann/json.hpp` 与 `single_include/nlohmann/json.hpp` 对比，确认两者是同一份内容的不同组织方式，还是需要额外生成步骤。
 
 **待确认**
 - `single_include/nlohmann/json.hpp` 是手工维护还是由脚本从 `include/` 生成的？`tools/` 下可能有相关脚本，本轮未确认
@@ -122,7 +122,7 @@
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/json/.handoff/handoff-2026-11-21-103847-cmake-build.md，按第 9 节「第一步动作」继续。
+读 .handoff/handoff-2026-11-21-103847-cmake-build.md，按第 9 节「第一步动作」继续。
 先跑文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 注意源码有两套形态：include/ 与 single_include/；构建系统有五套，改一套要核对其他几套。
 沿用项目现有技术栈，不要引入运行时依赖，不要抬高最低 C++ 标准。

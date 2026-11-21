@@ -1,7 +1,7 @@
 # 交接：转换器注册机制调研，准备扩展新格式
 
 - 生成时间：2026-11-21 09:53
-- 项目：markitdown（D:/Temp/skill-eval/markitdown）
+- 项目：markitdown（<项目根>）
 - 分支：main
 - 覆盖范围：从通读 README 与贡献规则 → 到摸清转换器注册链路与插件扩展点
 - 上一份交接：无
@@ -119,7 +119,7 @@
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/markitdown/.handoff/handoff-2026-11-21-095341-converter-research.md，按第 9 节「第一步动作」继续。
+读 .handoff/handoff-2026-11-21-095341-converter-research.md，按第 9 节「第一步动作」继续。
 先跑文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 沿用项目现有技术栈，不要更换语言/框架，不要新增依赖；新增格式优先按插件做，不要加进核心包。
 ```

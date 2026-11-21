@@ -1,7 +1,7 @@
 # 交接：v2 架构与测试机制调研，准备修并发相关问题
 
 - 生成时间：2026-11-21 10:21
-- 项目：bubbletea（D:/Temp/skill-eval/bubbletea）
+- 项目：bubbletea（<项目根>）
 - 分支：main
 - 覆盖范围：从通读 README 教程与升级指南 → 到搞清包结构、平台分层、测试机制
 - 上一份交接：无
@@ -120,7 +120,7 @@
 3. 按 v2 的消息类型与 `View` 签名写代码，不要照 v1 的记忆
 
 **第一步动作**
-> 在 `D:/Temp/skill-eval/bubbletea` 下先装 Go 1.26+（`go version` 要有输出），然后执行 `go test -race -count 1 ./...` 跑一遍基线；若 `tea.go` 的事件循环是问题所在，先读它的 `eventLoop` 与 `renderer` 协作部分再动手。
+> 在 `<项目根>` 下先装 Go 1.26+（`go version` 要有输出），然后执行 `go test -race -count 1 ./...` 跑一遍基线；若 `tea.go` 的事件循环是问题所在，先读它的 `eventLoop` 与 `renderer` 协作部分再动手。
 
 **待确认**
 - 要修的问题是上游已知 issue，还是本地发现的？如果是已知问题，先看有没有维护者给的方案
@@ -131,7 +131,7 @@
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/bubbletea/.handoff/handoff-2026-11-21-102145-concurrency-research.md，按第 9 节「第一步动作」继续。
+读 .handoff/handoff-2026-11-21-102145-concurrency-research.md，按第 9 节「第一步动作」继续。
 先跑文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 注意 import path 是 charm.land/bubbletea/v2，不是 GitHub 地址；v2 的 View() 返回 tea.View 不是 string。
 沿用项目现有技术栈，不要新增依赖。

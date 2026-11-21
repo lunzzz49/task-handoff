@@ -1,7 +1,7 @@
 # 交接：摸清文档-测试联动机制，准备提第一个 PR
 
 - 生成时间：2026-11-21 10:17
-- 项目：python-sdk（D:/Temp/skill-eval/python-sdk）
+- 项目：python-sdk（<项目根>）
 - 分支：main
 - 覆盖范围：从通读 AGENTS.md 与 CONTRIBUTING → 到搞清 docs_src 与 docs 的联动、确认提 PR 的前置门槛
 - 上一份交接：无
@@ -113,7 +113,7 @@ Model Context Protocol 的官方 Python SDK，提供 server 与 client 两侧实
 3. 动手前跑一次 `./scripts/test` 建立基线，否则改完分不清是新引入的问题还是环境问题
 
 **第一步动作**
-> 在 `D:/Temp/skill-eval/python-sdk` 下执行 `uv sync` 安装依赖，然后跑 `./scripts/test` 记录基线覆盖率与耗时；同时 `git branch -a` 确认本地能看到哪些分支（当前快照只有一次提交，`v1.x` 是否存在要到远端 @modelcontextprotocol/python-sdk 确认）。
+> 在 `<项目根>` 下执行 `uv sync` 安装依赖，然后跑 `./scripts/test` 记录基线覆盖率与耗时；同时 `git branch -a` 确认本地能看到哪些分支（当前快照只有一次提交，`v1.x` 是否存在要到远端 @modelcontextprotocol/python-sdk 确认）。
 
 **待确认**
 - 目标改动属于新功能还是 v1.x 修复？决定落在哪条分支
@@ -124,7 +124,7 @@ Model Context Protocol 的官方 Python SDK，提供 server 与 client 两侧实
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/python-sdk/.handoff/handoff-2026-11-21-101739-docs-test-linkage.md，按第 9 节「第一步动作」继续。
+读 .handoff/handoff-2026-11-21-101739-docs-test-linkage.md，按第 9 节「第一步动作」继续。
 先跑 git status 和文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 沿用项目现有技术栈，不要更换语言/框架，不要新增依赖；只用 uv，不要用 pip。
 ```

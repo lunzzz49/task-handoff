@@ -1,7 +1,7 @@
 # 交接：模块布局与 API 政策调研，准备提交改动
 
 - 生成时间：2026-11-21 10:33
-- 项目：guava（D:/Temp/skill-eval/guava）
+- 项目：guava（<项目根>）
 - 分支：master
 - 覆盖范围：从读根 pom 与 CONTRIBUTING → 到搞清模块划分、非标准目录布局、提 PR 的前置门槛
 - 上一份交接：无
@@ -119,7 +119,7 @@ Google 的 Java 核心工具库：集合、并发、IO、哈希、字符串处�
 3. 去 `guava-tests/test/` 找对应测试，别在 `guava/src` 下找
 
 **第一步动作**
-> 在 `D:/Temp/skill-eval/guava` 下执行 `./mvnw clean package -DskipTests` 确认能编译通过（首次会下载依赖，耗时较长）；然后打开 `guava-tests/test/com/google/common/` 找到与被改动类对应的测试文件，确认它的位置与命名习惯。
+> 在 `<项目根>` 下执行 `./mvnw clean package -DskipTests` 确认能编译通过（首次会下载依赖，耗时较长）；然后打开 `guava-tests/test/com/google/common/` 找到与被改动类对应的测试文件，确认它的位置与命名习惯。
 
 **待确认**
 - 这次是加 API 还是修 bug？前者要先走 issue 与 API 评审
@@ -130,7 +130,7 @@ Google 的 Java 核心工具库：集合、并发、IO、哈希、字符串处�
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/guava/.handoff/handoff-2026-11-21-103336-api-policy-research.md，按第 9 节「第一步动作」继续。
+读 .handoff/handoff-2026-11-21-103336-api-policy-research.md，按第 9 节「第一步动作」继续。
 先跑文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 注意主源码在 guava/src/com/google/common/，不是 src/main/java；测试在 guava-tests 独立模块。
 沿用项目现有技术栈，不要抬高 Java 源码级别，不要新增依赖。

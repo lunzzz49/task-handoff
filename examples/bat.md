@@ -1,7 +1,7 @@
 # 交接：构建与测试体系调研，准备加功能
 
 - 生成时间：2026-11-21 10:27
-- 项目：bat（D:/Temp/skill-eval/bat）
+- 项目：bat（<项目根>）
 - 分支：master
 - 覆盖范围：从读 Cargo.toml 与 CONTRIBUTING → 到搞清 feature 分层、三类测试、CHANGELOG 流程
 - 上一份交接：无
@@ -119,7 +119,7 @@
 3. 改动完成后补 `CHANGELOG.md` 条目并确认 feature 边界没破
 
 **第一步动作**
-> 在 `D:/Temp/skill-eval/bat` 下装 Rust 1.88+（`cargo --version` 要有输出），执行 `cargo test` 记录基线；若要改的是输出行为，先读 `tests/snapshot_tests.rs` 与 `tests/snapshots/` 现有组织方式，再决定是否新增快照。
+> 在 `<项目根>` 下装 Rust 1.88+（`cargo --version` 要有输出），执行 `cargo test` 记录基线；若要改的是输出行为，先读 `tests/snapshot_tests.rs` 与 `tests/snapshots/` 现有组织方式，再决定是否新增快照。
 
 **待确认**
 - 目标改动是否会碰 `assets/syntaxes` 或 `assets/themes`？碰了就要看 `doc/assets.md` 的语法测试说明
@@ -130,7 +130,7 @@
 新窗口开场直接粘贴：
 
 ```
-读 D:/Temp/skill-eval/bat/.handoff/handoff-2026-11-21-102737-build-test-research.md，按第 9 节「第一步动作」继续。
+读 .handoff/handoff-2026-11-21-102737-build-test-research.md，按第 9 节「第一步动作」继续。
 先跑文中的验证命令核对现实，与文档不一致时以代码为准并告诉我。
 注意 build script 在 build/main.rs，不在根目录；当库依赖时不要开 application feature。
 沿用项目现有技术栈，不要新增依赖。
