@@ -2,6 +2,17 @@
 
 本项目的所有重要变更都记在这里。
 
+## Unreleased
+
+### 能力
+
+- **可选事件入口，不限客户端**（`scripts/hook_entry.py`）：把 4.6 的收尾自查从「靠 AI 记得」变成事件触发。契约只有一条——事件发生时执行命令，stdin 传事件，stdout 读结果，空输出等于不打扰。输入认 JSON 字段别名，也认裸文本；输出支持 `claude` / `json` / `plain` 三种格式，自建 agent 十几行就能接。
+- **接入文档**（`references/integration.md`）：能力层与事件层分别要什么、字段别名表、自建 agent 最小实现、各客户端挂法、四步验收。
+- **自检**：`hook_entry.py self-test` 只验判定逻辑，不读写项目文件，接入前先跑。
+- **Claude Code 适配器**（`scripts/install_hooks.py`）：一条命令写 `settings.json`，幂等、保留他人配置、写前备份、支持 `--uninstall`。
+- 三条保护写死在入口里：无 `.handoff/` 静默退出、10 分钟内不重复记、异常一律 `exit 0`。
+- 状态说明：输出字段已对齐 Claude Code 2.1.316，但未做真实会话的注入验证；这是可选增强，不影响主流程。
+
 ## 0.1.0 — 2026-11-21
 
 首个版本。

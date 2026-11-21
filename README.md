@@ -52,7 +52,7 @@ WorkBuddy / CodeBuddy 会自动读取 `SKILL.md`。其它支持 `SKILL.md` 规�
 
 ```bash
 python ~/.workbuddy/skills/task-handoff/tests/test_handoff.py
-# Ran 65 tests ... OK
+# Ran 89 tests ... OK
 ```
 
 Windows 上若 `python` 不可用，试 `py`。
@@ -94,6 +94,18 @@ python "$HANDOFF" latest   # 拿最新一份的绝对路径
 | `undo` | 按 ID 撤销（`--id`），或撤销最后一条 |
 | `restore` | 回滚到最近一次写入前的快照 |
 | `summarize` | 把旧进展归档到附录，时间线只留活跃条目 |
+
+### 可选：自动提醒
+
+第四节「收尾兜底」原本靠 AI 记得自查。挂上事件入口后，说「收工 / 换个窗口 / 交接」会注入一句提醒，测试跑通会自动记一条进展。
+
+```bash
+python scripts/install_hooks.py    # Claude Code；其它客户端见 references/integration.md
+```
+
+入口的契约只有一条：**事件发生时执行命令，stdin 传事件，stdout 读结果，空输出等于不打扰**。所以不限于 Claude Code，自建 agent 也能接。
+
+刻意做窄：没有 `.handoff/` 就完全不说话，同一条 10 分钟内不重复记，只认测试通过这一种确定性事实。**不装不影响任何功能**，手动流程本来就是完整的。
 
 ## 它凭什么可信
 

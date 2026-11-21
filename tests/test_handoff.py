@@ -2,9 +2,11 @@
 
 import importlib.util
 import io
+import json
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from argparse import Namespace
@@ -590,6 +592,202 @@ class TestLatestBranch(unittest.TestCase):
         self._new("only-main")
         _, out = quiet(mod.cmd_latest, Namespace(root=str(self.root)))
         self.assertNotIn("当前在", out)
+
+
+class TestHooks(Base):
+    """4.8 的可选 hook：只在该说话的时候说话，绝不凭空建文档。"""
+
+    def run_hook(self, mode, payload, *extra):
+        return subprocess.run(
+            [sys.executable, str(SKILL / "scripts" / "hook_entry.py"), mode, *extra],
+            input=json.dumps(payload, ensure_ascii=False),
+            capture_output=True, text=True, encoding="utf-8",
+            cwd=str(self.root), timeout=60,
+        )
+
+    def run_raw(self, mode, text, *extra):
+        """裸文本进 stdin，模拟不支持 JSON 的 agent。"""
+        return subprocess.run(
+            [sys.executable, str(SKILL / "scripts" / "hook_entry.py"), mode, *extra],
+            input=text,
+            capture_output=True, text=True, encoding="utf-8",
+            cwd=str(self.root), timeout=60,
+        )
+
+    def _post(self, command, stdout, stderr="", interrupted=False):
+        return {
+            "tool_name": "Bash",
+            "cwd": str(self.root),
+            "tool_input": {"command": command},
+            "tool_response": {"stdout": stdout, "stderr": stderr, "interrupted": interrupted},
+        }
+
+    def test_wrap_up_word_emits_reminder(self):
+        p = self.run_hook("prompt-submit", {"prompt": "今天就到这吧", "cwd": str(self.root)})
+        self.assertEqual(p.returncode, 0)
+        self.assertIn("4.6", p.stdout)
+
+    def test_plain_prompt_stays_silent(self):
+        p = self.run_hook("prompt-submit", {"prompt": "把导出改成 xlsx", "cwd": str(self.root)})
+        self.assertEqual(p.stdout.strip(), "")
+
+    def test_unknown_mode_never_blocks(self):
+        """参数写错时 exit 2 会阻断用户输入，必须静默成功。"""
+        p = self.run_hook("typo-mode", {})
+        self.assertEqual(p.returncode, 0)
+
+    def test_passing_test_is_logged(self):
+        doc = self.new()
+        p = self.run_hook("post-tool", self._post("pytest -q", "3 passed in 0.12s"))
+        self.assertEqual(p.returncode, 0)
+        self.assertIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_report_carries_undo_id(self):
+        """4.4：不告诉用户 ID，就等于撤不回来。"""
+        self.new()
+        p = self.run_hook("post-tool", self._post("pytest -q", "3 passed"))
+        self.assertIn("undo --id", p.stdout)
+
+    def test_failing_test_is_not_logged(self):
+        doc = self.new()
+        self.run_hook("post-tool", self._post("pytest -q", "1 failed, 3 passed"))
+        self.assertNotIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_zero_failed_still_counts_as_pass(self):
+        """「0 failed」里的 failed 不能当成失败，否则通过也记不上。"""
+        doc = self.new()
+        self.run_hook("post-tool", self._post("pytest -q", "3 passed, 0 failed in 0.2s"))
+        self.assertIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_venv_interpreter_prefix_is_recognized(self):
+        """venv 里的调用带解释器前缀，锚定行首会漏掉。"""
+        doc = self.new()
+        cmd = r".venv\Scripts\python.exe -m pytest tests -q"
+        self.run_hook("post-tool", self._post(cmd, "5 passed in 1.1s"))
+        self.assertIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_watch_mode_is_not_logged(self):
+        doc = self.new()
+        self.run_hook("post-tool", self._post("npm test -- --watch", "12 passed"))
+        self.assertNotIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_non_test_command_is_ignored(self):
+        doc = self.new()
+        self.run_hook("post-tool", self._post("ls -la", "3 passed"))
+        self.assertNotIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_duplicate_within_window_is_skipped(self):
+        doc = self.new()
+        payload = self._post("pytest -q", "3 passed")
+        self.run_hook("post-tool", payload)
+        self.run_hook("post-tool", payload)
+        self.assertEqual(doc.read_text(encoding="utf-8").count("执行通过"), 1)
+
+    def test_no_handoff_dir_is_not_created(self):
+        self.run_hook("post-tool", self._post("pytest -q", "3 passed"))
+        self.assertFalse((self.root / ".handoff").exists())
+
+    # —— 接入别家 agent 的兼容层 ——
+
+    def test_bare_text_is_accepted(self):
+        """不支持 JSON 的 agent 直接传文本也能用。"""
+        p = self.run_raw("prompt-submit", "今天就到这吧", "--format", "plain")
+        self.assertEqual(p.returncode, 0)
+        self.assertIn("4.6", p.stdout)
+
+    def test_message_field_alias(self):
+        """不同 agent 把用户输入叫 message 也得认。"""
+        p = self.run_hook("prompt-submit", {"message": "先这样吧"})
+        self.assertIn("4.6", p.stdout)
+
+    def test_plain_format_is_not_json(self):
+        p = self.run_hook("prompt-submit", {"prompt": "收工"}, "--format", "plain")
+        self.assertFalse(p.stdout.strip().startswith("{"))
+        self.assertIn("4.6", p.stdout)
+
+    def test_json_format_shape(self):
+        p = self.run_hook("prompt-submit", {"prompt": "收工"}, "--format", "json")
+        data = json.loads(p.stdout)
+        self.assertEqual(data["action"], "context")
+        self.assertEqual(data["event"], "UserPromptSubmit")
+
+    def test_exit_code_nonzero_skips_even_with_pass_markers(self):
+        doc = self.new()
+        payload = self._post("pytest -q", "3 passed")
+        payload["exit_code"] = 2
+        self.run_hook("post-tool", payload)
+        self.assertNotIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_non_shell_tool_is_skipped(self):
+        doc = self.new()
+        payload = self._post("pytest -q", "3 passed")
+        payload["tool_name"] = "read_file"
+        self.run_hook("post-tool", payload)
+        self.assertNotIn("执行通过", doc.read_text(encoding="utf-8"))
+
+    def test_self_test_passes(self):
+        p = self.run_raw("self-test", "")
+        self.assertEqual(p.returncode, 0)
+        self.assertIn("全部通过", p.stdout)
+
+
+class TestInstallHooks(unittest.TestCase):
+    """安装器：幂等、不覆盖别人的配置、坏 JSON 不落盘。"""
+
+    def setUp(self):
+        self.dir = Path(tempfile.mkdtemp())
+        self.settings = self.dir / "settings.json"
+
+    def tearDown(self):
+        shutil.rmtree(self.dir, ignore_errors=True)
+
+    def run_install(self, *args):
+        return subprocess.run(
+            [sys.executable, str(SKILL / "scripts" / "install_hooks.py"),
+             "--settings", str(self.settings), *args],
+            capture_output=True, text=True, encoding="utf-8", timeout=60,
+        )
+
+    def read(self):
+        return json.loads(self.settings.read_text(encoding="utf-8"))
+
+    def test_install_is_idempotent(self):
+        self.run_install()
+        self.run_install()
+        groups = self.read()["hooks"]["PostToolUse"]
+        cmds = [h["command"] for g in groups for h in g["hooks"]]
+        self.assertEqual(sum("hook_entry.py" in c for c in cmds), 1)
+
+    def test_install_keeps_foreign_hooks_and_fields(self):
+        self.settings.write_text(json.dumps({
+            "model": "opus",
+            "hooks": {"Stop": [{"hooks": [{"type": "command", "command": "echo keep"}]}]},
+        }), encoding="utf-8")
+        self.run_install()
+        data = self.read()
+        self.assertEqual(data["model"], "opus")
+        self.assertEqual(data["hooks"]["Stop"][0]["hooks"][0]["command"], "echo keep")
+
+    def test_uninstall_removes_only_ours(self):
+        self.settings.write_text(json.dumps({
+            "hooks": {"Stop": [{"hooks": [{"type": "command", "command": "echo keep"}]}]},
+        }), encoding="utf-8")
+        self.run_install()
+        self.run_install("--uninstall")
+        data = self.read()
+        self.assertNotIn("UserPromptSubmit", data["hooks"])
+        self.assertIn("Stop", data["hooks"])
+
+    def test_bad_json_is_not_overwritten(self):
+        self.settings.write_text("{not json", encoding="utf-8")
+        p = self.run_install()
+        self.assertNotEqual(p.returncode, 0)
+        self.assertEqual(self.settings.read_text(encoding="utf-8"), "{not json")
+
+    def test_dry_run_does_not_write(self):
+        p = self.run_install("--dry-run")
+        self.assertEqual(p.returncode, 0)
+        self.assertFalse(self.settings.exists())
 
 
 if __name__ == "__main__":

@@ -19,6 +19,9 @@ PAGES = {
     "README.md": "index.html",
     "examples/README.md": "examples/index.html",
     "SKILL.md": "skill.html",
+    # 输出路径必须与正文里的相对链接一致：README 写的是 references/integration.md，
+    # fix_links 会把它改成 references/integration.html，放在根目录就会 404。
+    "references/integration.md": "references/integration.html",
 }
 
 CSS = """
@@ -57,7 +60,7 @@ TEMPLATE = """<!doctype html>
 </head>
 <body>
 <main>
-<nav class="nav"><a href="{home}">task-handoff</a><a href="{examples}">真实产出</a><a href="{skill}">SKILL.md</a></nav>
+<nav class="nav"><a href="{home}">task-handoff</a><a href="{examples}">真实产出</a><a href="{skill}">SKILL.md</a><a href="{integration}">接入</a></nav>
 {body}
 </main>
 </body>
@@ -125,6 +128,7 @@ def build(write: bool = True) -> list[str]:
             home=prefix + "index.html",
             examples=prefix + "examples/index.html",
             skill=prefix + "skill.html",
+            integration=prefix + "references/integration.html",
         )
         target = OUT / out_rel
         if write:
@@ -146,6 +150,7 @@ def build(write: bool = True) -> list[str]:
             home="../index.html",
             examples="index.html",
             skill="../skill.html",
+            integration="../references/integration.html",
         )
         target = OUT / rel_out
         if write:

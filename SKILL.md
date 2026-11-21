@@ -14,7 +14,9 @@ description: 会话交接与阶段总结技能。当用户要把一个阶段的�
 | `SKILL.md`（本文件） | **流程**：何时写、写到哪、按什么顺序做 | 总是 |
 | `references/standards.md` | **标准**：什么算合格——该写什么、技术栈怎么写、自检七问、篇幅界标、反模式 | 动笔前读一次，自检时对照 |
 | `references/handoff-template.md` | **标准**：空白骨架 + 填好的完整示例 | 不清楚某一节该写多细时看示例 |
+| `references/integration.md` | **标准**：接入契约——能力层要什么、事件层传什么字段、自建 agent 怎么挂 | 换客户端或接入自建 agent 时 |
 | `scripts/handoff.py` | **工具**：`new` 建骨架 / `latest` 找最新 / `check` 校验（`--stale` 加事实核对）/ `log` 记进展 / `journal` 列条目 / `undo` 撤销 / `restore` 回滚 | 直接执行，不必读源码 |
+| `scripts/hook_entry.py`<br>`scripts/install_hooks.py` | **工具（可选）**：把 4.6 的收尾自查接到客户端 hook 上，装了才生效 | 想少漏记时，见 4.8 |
 
 原则：流程决定了「做什么」，标准决定了「做到什么程度」，脚本决定了「不靠人肉记的那些确定性动作」。
 
@@ -251,6 +253,36 @@ python <skill目录>/scripts/handoff.py summarize --apply   # 归档：条目移
 
 **时机**：写完整交接文档之前，或时间线超过 15 条时。
 
+### 4.8 可选：让 4.6 不再靠自觉
+
+上面整套机制的前提是「AI 记得」。想把它变成事件触发，可以挂两个 hook：
+
+```bash
+python <skill目录>/scripts/install_hooks.py              # Claude Code：写 ~/.claude/settings.json
+python <skill目录>/scripts/install_hooks.py --uninstall  # 卸掉，只删自己的条目
+```
+
+| 事件 | 触发条件 | 做什么 |
+|---|---|---|
+| `prompt-submit`（用户输入后） | 出现「收工 / 先这样 / 今天就到 / 换个窗口 / 交接 / 总结一下」 | 注入一句 4.6 自查提醒 |
+| `post-tool`（命令执行后） | 测试命令跑完，有通过标记、无失败标记 | 自动 `log` 一条「<命令> 执行通过」 |
+
+**不限 Claude Code**。入口的契约只有一条：事件发生时执行命令，stdin 写事件，stdout 读结果；空输出等于不打扰。所有 agent 都能按这个接，字段别名、三种输出格式、自建 agent 的最小实现见 `references/integration.md`。
+
+三条边界，写死在脚本里，改流程时别绕过去：
+
+- 项目里没有 `.handoff/` 就静默退出，**绝不凭空建骨架**
+- 同一条条目 10 分钟内不重复记
+- 只记「测试通过」这种确定性事实；4.1 的判断、4.2 的排除仍归 AI
+
+接入前跑一次自检，它只验判定、不碰项目文件：
+
+```bash
+python <skill目录>/scripts/hook_entry.py self-test
+```
+
+**不装不影响任何功能**——上面的手动流程本来就是完整的；装了只是少漏几条，不是多一层保障。
+
 ## 五、读交接流程
 
 用户说「接着上次」「继续之前的工作」，或工作区存在 `.handoff/` 时：
@@ -278,6 +310,6 @@ python <skill目录>/scripts/handoff.py summarize --apply   # 归档：条目移
 python <skill目录>/tests/test_handoff.py -v
 ```
 
-65 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、latest 分支隔离、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定。
+89 个用例覆盖：创建不覆盖、跨阶段继承、项目根探测（.git 优先、Maven/Gradle/CMake/PHP/Ruby 标记）、路径提取（含占位符、HTML 闭合标签、HTTP 路由、module path、URI scheme、否定语境、引用块剔除）、简写路径按名回退（目录与文件）、多文件参数拆分、时间线追加、undo/restore、summarize 归档与正文保护、空骨架 latest 提示、撤销后清理空归档节、latest 分支隔离、决策表来源列校验、数量断言提醒、空仓库分支探测、check 的各条判定、hook 的关键词命中与静默、测试通过/失败/监听模式/退出码判定、判重、无文档不建骨架、裸文本与字段别名输入、三种输出格式、自检、安装器幂等与卸载保留他人配置。
 
-改 `scripts/handoff.py` 不跑测试等于裸奔——`undo` 的行尾处理、`--stale` 的时间容差这类边界，只在你真的急着撤回时才会暴露。
+改 `scripts/` 下任何脚本不跑测试等于裸奔——`undo` 的行尾处理、`--stale` 的时间容差、hook 的判重窗口，这类边界只在你真的急着撤回或根本记不起来时才会暴露。
