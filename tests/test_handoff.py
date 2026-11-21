@@ -513,7 +513,9 @@ class TestRootDetection(unittest.TestCase):
         sub = root.joinpath(*sub_parts)
         sub.mkdir(parents=True)
         try:
-            self.assertEqual(mod.find_root(sub), root)
+            # find_root 内部会 resolve()，macOS 的 /var 是指向 /private/var 的软链，
+            # 直接比 Path 会因符号链接不相等而误报
+            self.assertEqual(mod.find_root(sub), root.resolve())
         finally:
             shutil.rmtree(root, ignore_errors=True)
 
@@ -538,7 +540,9 @@ class TestRootDetection(unittest.TestCase):
         sub.mkdir()
         (sub / "pom.xml").write_text("x", encoding="utf-8")
         try:
-            self.assertEqual(mod.find_root(sub), root)
+            # find_root 内部会 resolve()，macOS 的 /var 是指向 /private/var 的软链，
+            # 直接比 Path 会因符号链接不相等而误报
+            self.assertEqual(mod.find_root(sub), root.resolve())
         finally:
             shutil.rmtree(root, ignore_errors=True)
 

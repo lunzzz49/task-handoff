@@ -12,8 +12,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ["3.9", "3.13"]
+        include:
+          # ubuntu-latest 已是 26.04，不再提供 Python 3.9，最低版本单独跑在 22.04 上
+          - os: ubuntu-22.04
+            python: "3.9"
+          - os: ubuntu-latest
+            python: "3.13"
+          - os: windows-latest
+            python: "3.13"
+          - os: macos-latest
+            python: "3.13"
     steps:
       - uses: actions/checkout@v4
 
