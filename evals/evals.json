@@ -1,0 +1,23 @@
+{
+  "skill_name": "task-handoff",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "这个导出功能总算弄完了，xlsx 和 csv 都能下，中文文件名也没问题，测试跑过了。今天就先到这儿吧，明天换台电脑接着弄——哦对，这个窗口的上下文也快满了。",
+      "expected_output": "先跑 git log/status/diff 取证，再用 new --slug export 建骨架并填满十节；文档落盘在 <项目根>/.handoff/handoff-<时间戳>-export.md；跑 check 通过；最后回三件事：绝对路径、覆盖范围一句话、可直接粘贴的新窗口开场 prompt。收尾时按 4.5 列出本轮「已完成但未记录」的候选问用户，不擅自批量补记。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "接着上次的活儿干。之前那个 billing 模块做到一半，交接文档我记得写过了，你找找看。",
+      "expected_output": "用 latest 定位到最新一份（若提示空骨架则改读上一份），完整读一遍；跑 git status 和文档第 8 节的验证命令核对现实；用 3–5 行复述「当前状态 X、卡在 Y、我打算先做 Z」并等用户确认，不直接大改代码；发现文档与代码冲突时以代码为准并指出过期处。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "刚才那个中文文件名下载的 bug 修好了，用 pytest tests/test_export.py -k chinese 验证过，绿了。",
+      "expected_output": "调 handoff.py log 写入一条带验证方式的进展（--event 说清修好什么、--files 指定改动文件、--verify 写命令），条目带 6 位短 ID；回三行含已记录 ID、撤销命令、journal 命令。不新建整份交接文档。",
+      "files": []
+    }
+  ]
+}
